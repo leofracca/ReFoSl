@@ -4,6 +4,8 @@ Just select the sounds you want to play and let them ReFoSling you:blush:.
 You can play one or more sounds and adjust the volume of each one, creating your best sounds environment to help yourself do what you're doing, but better.
 For example, I found it really useful during my programming sessions or when I study, especially when using the earphones.
 
+**Relax. Focus. Sleep. This is ReFoSl.**
+
 ## How is it made
 ReFoSl is a WPF project, built using the MVVM pattern with the help of Caliburn.Micro framework.
 
