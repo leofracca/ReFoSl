@@ -1,10 +1,10 @@
 # ReFoSl
-ReFoSl is a program that helps you to relax, focus and sleep.
-Just select the sounds you want to play and let them _ReFoSling_ you:blush:.
-You can play one or more sounds and adjust the volume of each one, creating your best sounds environment to help yourself do what you're doing.
-For example, I found it really useful during my programming sessions or when I study, especially when using the earphones.
+ReFoSl is an app that helps you to relax, focus and sleep.
+Just pick the sounds you want to play and let them _ReFoSl_ you:blush:.
+You can play one or more sounds and adjust the volume of each one, creating the best sound environment to help yourself in what you are doing.
+For example, I found it really useful during my programming sessions or when I study, especially when using earphones.
 
-All sounds are in .wav format to ensure the best possible experience with high quality audio.
+All the sounds are in .wav format to ensure the best possible experience with high quality audio.
 
 **Relax. Focus. Sleep. This is ReFoSl.**
 
@@ -19,4 +19,4 @@ The followings are used to make this project:
 - [Mixkit](https://mixkit.co/free-sound-effects/), [Freesound](https://freesound.org/) and [ZapSplat](https://www.zapsplat.com/) for the amazing sounds
 
 ## Others
-I wanted to make ReFoSl because all of the others similar projects needs a connection to internet and/or a premium subscription. With ReFoSl all the sounds are available for free and without an internet connection. Now and forever!:wink:
+I wanted to make ReFoSl because all of the other similar projects need a connection to internet and/or a premium subscription. ReFoSl solves these problems providing all the sounds for free and offline!:wink:
