@@ -13,7 +13,7 @@ namespace ReFoSl.ViewModels
         private const string SOUNDS_FOLDER = "Sounds/";
         private const string WAV_EXTENSION = ".wav";
 
-        private List<SoundEffectInstanceExtended> _players = new List<SoundEffectInstanceExtended>();
+        private List<SoundEffectInstanceExtendedModel> _players = new List<SoundEffectInstanceExtendedModel>();
 
         /// <summary>
         /// Play the selected sound
@@ -24,7 +24,7 @@ namespace ReFoSl.ViewModels
         {
             string sound = SOUNDS_FOLDER + soundName + WAV_EXTENSION;
 
-            SoundEffectInstanceExtended player = new SoundEffectInstanceExtended(sound,
+            SoundEffectInstanceExtendedModel player = new SoundEffectInstanceExtendedModel(sound,
                 SoundEffect.FromStream(Application.GetContentStream(new Uri(sound, UriKind.Relative)).Stream).CreateInstance());
             player.Play(volume);
 
@@ -40,7 +40,7 @@ namespace ReFoSl.ViewModels
             string sound = SOUNDS_FOLDER + soundName + WAV_EXTENSION;
 
             // Loop through the players to find the one that is playing the selected sound
-            foreach (SoundEffectInstanceExtended player in _players)
+            foreach (SoundEffectInstanceExtendedModel player in _players)
             {
                 if (player.Name.Equals(sound))
                 {
@@ -60,7 +60,7 @@ namespace ReFoSl.ViewModels
         {
             string sound = SOUNDS_FOLDER + soundName + WAV_EXTENSION;
 
-            foreach (SoundEffectInstanceExtended player in _players)
+            foreach (SoundEffectInstanceExtendedModel player in _players)
             {
                 if (player.Name.Equals(sound))
                 {

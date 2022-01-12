@@ -2,7 +2,7 @@
 
 namespace ReFoSl.Models
 {
-    class SoundEffectInstanceExtended
+    class SoundEffectInstanceExtendedModel
     {
         private string _name;
         public string Name
@@ -26,7 +26,7 @@ namespace ReFoSl.Models
         }
 
 
-        public SoundEffectInstanceExtended(string name, SoundEffectInstance soundEffectInstance)
+        public SoundEffectInstanceExtendedModel(string name, SoundEffectInstance soundEffectInstance)
         {
             _name = name;
             _soundEffectInstanceProperty = soundEffectInstance;

@@ -9,7 +9,14 @@
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
         SizeToContent="Manual"
-        Title="ReFoSl" Height="450" Width="1200">
+        Title="ReFoSl" Height="450" Width="1200"
+        
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}">
 
     <Grid>
         <Grid.RowDefinitions>
