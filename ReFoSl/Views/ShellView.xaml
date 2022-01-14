@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:shell="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:cal="http://www.caliburnproject.org"
         xmlns:refosl="clr-namespace:ReFoSl"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
@@ -19,7 +21,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="25" />
+            <RowDefinition Height="70" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -33,6 +35,38 @@
             </Border.Background>
         </Border>
 
+        <!-- Top row -->
+        <materialDesign:ColorZone Mode="Custom"
+                                  Background="#33FFFFFF"
+                                  Foreground="White"
+                                  Padding="16"
+                                  CornerRadius="0,0,0,0"
+                                  materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                  ClipToBounds="False">
+            <DockPanel>
+                <!-- Slider for master volume -->
+                <StackPanel Orientation="Horizontal"
+                            DockPanel.Dock="Right">
+                    <iconPacks:PackIconMaterialDesign Kind="VolumeUp"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,10,0"/>
+                    <Slider x:Name="MasterVolume"
+                            Value="1"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"
+                            BorderThickness="0" Width="150"
+                            ToolTip="Master volume"
+                            cal:Message.Attach="[Event ValueChanged]=[Action SetMasterVolume($source)]"/>
+                </StackPanel>
+
+                <!-- Title -->
+                <TextBlock VerticalAlignment="Center"
+                            Margin="16 0 0 0"
+                            FontSize="44"
+                            FontFamily="Segoe UI Light"
+                            Text="ReFoSl" />
+            </DockPanel>
+        </materialDesign:ColorZone>
 
         <!-- Toggle Buttons -->
         <ScrollViewer Grid.Row="1" VerticalAlignment="Center">
