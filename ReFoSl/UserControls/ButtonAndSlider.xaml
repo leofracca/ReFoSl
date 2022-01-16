@@ -21,6 +21,7 @@
         </ToggleButton>
         <Slider x:Name="slider"
                 cal:Message.Attach="[Event ValueChanged]=[Action ChangeVolume($source, button.ContentStringFormat)]"
-                Opacity="{Binding ElementName=button, Path=IsChecked}" />
+                Opacity="{Binding ElementName=button, Path=IsChecked}"
+                IsEnabled="{Binding ElementName=button, Path=IsChecked}" />
     </StackPanel>
 </UserControl>
