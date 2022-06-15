@@ -10,7 +10,7 @@
 
     <StackPanel Orientation="Vertical">
         <ToggleButton x:Name="button" ContentStringFormat="{Binding SoundName}" 
-                      cal:Message.Attach="[Event Checked]=[Action PlaySound(button.ContentStringFormat, slider.Value)];
+                      cal:Message.Attach="[Event Checked]=[Action PlaySound(button.ContentStringFormat, slider.Value, $view)];
                                           [Event Unchecked]=[Action StopSound(button.ContentStringFormat)]"
                       ToolTip="{Binding ToolTipText}">
             <Path Data="{Binding ImagePath}"

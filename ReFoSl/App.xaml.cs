@@ -9,7 +9,7 @@ using System.Windows;
 namespace ReFoSl
 {
     /// <summary>
-    /// Logica di interazione per App.xaml
+    /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {

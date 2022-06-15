@@ -64,13 +64,13 @@
                 </StackPanel>
 
                 <!-- Pause/Restart button -->
-                <ToggleButton
-                    DockPanel.Dock="Right"
-                    Margin="0,-2,15,0"
-                    Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
-                    ToolTip="Pause/Restart sounds"
-                    cal:Message.Attach="[Event Checked]=[Action PauseAllPlayingSounds($view)];
-                                        [Event Unchecked]=[Action PlayAllPausedSounds($view)]">
+                <ToggleButton x:Name="PauseAll"
+                              DockPanel.Dock="Right"
+                              Margin="0,-2,15,0"
+                              Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                              ToolTip="Pause/Restart sounds"
+                              cal:Message.Attach="[Event Checked]=[Action PauseAllPlayingSounds($view)];
+                                                  [Event Unchecked]=[Action PlayAllPausedSounds($view)]">
                     <iconPacks:PackIconFeatherIcons
                         Kind="PauseCircle"
                         Foreground="DimGray"

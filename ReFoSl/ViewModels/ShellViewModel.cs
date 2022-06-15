@@ -26,7 +26,8 @@ namespace ReFoSl.ViewModels
         /// </summary>
         /// <param name="soundName">The name of the selected sound</param>
         /// <param name="volume">The volume of the selected sound</param>
-        public void PlaySound(string soundName, double volume)
+        /// <param name="window">The window</param>
+        public void PlaySound(string soundName, double volume, Window window)
         {
             string sound = SOUNDS_FOLDER + soundName + WAV_EXTENSION;
 
@@ -35,6 +36,12 @@ namespace ReFoSl.ViewModels
             player.Play(volume, _masterVolumeMult);
 
             _players.Add(player);
+
+            // If the "Pause all sounds" is checked, and the user start a new sound
+            // delete all the paused sounds, uncheck the button and continue normally
+            _pausedSounds.Clear();
+            var pauseAll = (ToggleButton)window.FindName("PauseAll");
+            pauseAll.IsChecked = false;
         }
 
         /// <summary>
@@ -99,6 +106,7 @@ namespace ReFoSl.ViewModels
         /// <summary>
         /// Pause all the playing sounds
         /// </summary>
+        /// <param name="window">The window</param>
         public void PauseAllPlayingSounds(Window window)
         {
             var playersCopy = new List<SoundEffectInstanceExtendedModel>(_players);
@@ -117,7 +125,7 @@ namespace ReFoSl.ViewModels
         /// <summary>
         /// Restart all the paused sounds
         /// </summary>
-        /// <param name="window"></param>
+        /// <param name="window">The window</param>
         public void PlayAllPausedSounds(Window window)
         {
             var pausedCopy = new List<SoundEffectInstanceExtendedModel>(_pausedSounds);
