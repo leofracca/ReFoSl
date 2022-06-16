@@ -16,7 +16,7 @@
         Width="1200"
         MinHeight="350"
         MinWidth="960"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:materialDesign1="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RPGAwesome"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="Medium"
@@ -77,6 +77,22 @@
                         Height="21"
                         Width="21" />
                 </ToggleButton>
+
+                <!-- Play random sounds -->
+                <Button x:Name="Random"
+                        DockPanel.Dock="Right"
+                        Margin="0,-2,15,0"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                        ToolTip="Play random sounds"
+                        cal:Message.Attach="[Event Click]=[Action PlayRandomSounds($view)]"
+                        Background="#AAFFFFFF"
+                        BorderBrush="#FFFFFFFF">
+                    <materialDesign1:PackIconRPGAwesome
+                        Kind="PerspectiveDiceRandom"
+                        Height="25"
+                        Width="25"
+                        Foreground="DimGray"/>
+                </Button>
 
                 <!-- Title -->
                 <TextBlock VerticalAlignment="Center"

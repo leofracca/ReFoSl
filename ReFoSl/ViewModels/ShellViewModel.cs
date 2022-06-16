@@ -19,6 +19,7 @@ namespace ReFoSl.ViewModels
         // The list that contains all the sounds paused with the "Pause all playing sounds"
         private List<SoundEffectInstanceExtendedModel> _pausedSounds = new List<SoundEffectInstanceExtendedModel>();
 
+        // The general volume (it affects all the volumes)
         private double _masterVolumeMult = 1f;
 
         /// <summary>
@@ -114,10 +115,7 @@ namespace ReFoSl.ViewModels
             {
                 _pausedSounds.Add(player);
 
-                // Find the right button and uncheck it (doing this will stop the sound)
-                var b = (ButtonAndSlider)window.FindName(player.Name);
-                var tb = (ToggleButton)b.FindName("button");
-                tb.IsChecked = false;
+                CheckUncheckButton(window, player.Name, false);
             }
             
         }
@@ -133,11 +131,74 @@ namespace ReFoSl.ViewModels
             {
                 _pausedSounds.Remove(player);
 
-                // Find the right button and check it (doing this will restart the sound)
-                var b = (ButtonAndSlider)window.FindName(player.Name);
-                var tb = (ToggleButton)b.FindName("button");
-                tb.IsChecked = true;
+                CheckUncheckButton(window, player.Name, true);
             }
+        }
+
+        /// <summary>
+        /// Throw a random number between 2 and 4 (n) and play n random sounds
+        /// </summary>
+        /// <param name="window">The window</param>
+        public void PlayRandomSounds(Window window)
+        {
+            string[] soundNames = new string[] {"footsteps_on_grass", "birds", "campfire", "water_flowing",
+                                                "forest", "rain", "thunderstorm", "waves",
+                                                "happy_puppy_barks", "kids_playing", "restaurant", "stadium",
+                                                "eating", "keyboard", "writing_on_blackboard", "clock"};
+
+            // Stop all the sounds
+            PauseAllPlayingSounds(window);
+            // But clear the list (we don't want to remember the sounds in this case)
+            _pausedSounds.Clear();
+
+            // Choose a random number
+            Random rnd = new Random();
+            int n = rnd.Next(2, 5);
+
+            // Start random sounds
+            for (int i = 0; i < n; i++)
+            {
+                // Choose a random sound and start it
+                var randomSound = soundNames[rnd.Next(soundNames.Length)];
+                CheckUncheckButton(window, randomSound, true);
+
+                // Then set the volume to a random value
+                SetSlider(window, randomSound, rnd.NextDouble());
+            }
+        }
+
+        /// <summary>
+        /// Check or uncheck the button with the same name as the sound name (soundName)
+        /// </summary>
+        /// <param name="window">The window</param>
+        /// <param name="soundName">The name of the sound (i.e. the name of the button)</param>
+        /// <param name="check">True if we need to check the button, false if we need to uncheck the button</param>
+        private void CheckUncheckButton(Window window, string soundName, bool check)
+        {
+            // Find the right button and uncheck it (doing this will stop the sound)
+            var b = (ButtonAndSlider)window.FindName(soundName);
+            var tb = (ToggleButton)b.FindName("button");
+
+            // Avoid to check the button if it is already checked (a new sound would start...)
+            if (tb.IsChecked != check)
+                tb.IsChecked = check;
+        }
+
+        /// <summary>
+        /// Set the value of the slider corresponding to the button with the name of the sound (soundName)
+        /// and change the volume
+        /// </summary>
+        /// <param name="window">The window</param>
+        /// <param name="soundName">The name of the sound (i.e. the name of the button)</param>
+        /// <param name="volume">The value to set the slider (and to set the volume)</param>
+        private void SetSlider(Window window, string soundName, double volume)
+        {
+            // Find the right slider and adjust the value
+            var b = (ButtonAndSlider)window.FindName(soundName);
+            var s = (Slider)b.FindName("slider");
+            s.Value = volume;
+
+            ChangeVolume(s, soundName);
         }
     }
     
