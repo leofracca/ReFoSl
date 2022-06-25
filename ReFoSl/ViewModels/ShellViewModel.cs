@@ -6,11 +6,14 @@ using System.Windows;
 using Microsoft.Xna.Framework.Audio;
 using ReFoSl.Models;
 using System.Windows.Controls.Primitives;
+using ReFoSl.ViewModels;
 
 namespace ReFoSl.ViewModels
 {
     public class ShellViewModel : Screen
     {
+        IWindowManager windowManager = new WindowManager();
+
         private const string SOUNDS_FOLDER = "Sounds/";
         private const string WAV_EXTENSION = ".wav";
 
@@ -165,6 +168,23 @@ namespace ReFoSl.ViewModels
                 // Then set the volume to a random value
                 SetSlider(window, randomSound, rnd.NextDouble());
             }
+        }
+
+        /// <summary>
+        /// Open a new window to save the name of the mix
+        /// or open a message box if a mix cannot be created (i.e. 0 sounds)
+        /// </summary>
+        /// <param name="window"></param>
+        public void AddNewMix(Window window)
+        {
+            if (_players.Count != 0)
+            {
+                var addNewMixView = new AddNewMixViewModel();
+                windowManager.ShowDialogAsync(addNewMixView);
+            }
+            else
+                MessageBox.Show("You cannot create a mix without any sound." +
+                    " Please select some sounds to create a mix.");
         }
 
         /// <summary>

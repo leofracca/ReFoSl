@@ -9,7 +9,7 @@
                 <ResourceDictionary>
                     <local:Bootstrapper x:Key="Bootstrapper" />
                 </ResourceDictionary>
-                <materialDesign:CustomColorTheme BaseTheme="Dark" PrimaryColor="White" SecondaryColor="LightGray" />
+                <materialDesign:CustomColorTheme BaseTheme="Dark" PrimaryColor="#bdbdbd" SecondaryColor="LightGray" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
@@ -56,6 +56,7 @@
                 <Setter Property="Minimum" Value="0" />
                 <Setter Property="BorderThickness" Value="50,0" />
                 <Setter Property="IsMoveToPointEnabled" Value="True" />
+                <Setter Property="Foreground" Value="White" />
 
                 <!-- Animations -->
                 <Style.Triggers>

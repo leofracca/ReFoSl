@@ -16,7 +16,8 @@
         Width="1200"
         MinHeight="350"
         MinWidth="960"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:materialDesign1="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RPGAwesome"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:materialDesign1="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RPGAwesome"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="Medium"
@@ -111,7 +112,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <!-- Top row -->
+            <!-- Dock -->
             <materialDesign:ColorZone Mode="Custom"
                                   Background="#33FFFFFF"
                                   Foreground="White"
@@ -164,6 +165,16 @@
                             Height="25"
                             Width="25"
                             Foreground="DimGray"/>
+                    </Button>
+
+                    <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                            DockPanel.Dock="Right"
+                            Margin="0,0,20,0"
+                            Background="White"
+                            materialDesign:ButtonAssist.CornerRadius="15"
+                            ToolTip="Save a new Mix"
+                            cal:Message.Attach="[Event Click]=[Action AddNewMix($view)]">
+                        <TextBlock Text="New Mix" />
                     </Button>
 
                     <!-- Title -->
