@@ -17,7 +17,7 @@
         MinHeight="350"
         MinWidth="960"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:materialDesign1="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RPGAwesome"
+        xmlns:materialDesign1="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RPGAwesome" xmlns:system="clr-namespace:System;assembly=mscorlib"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="Medium"
@@ -26,7 +26,7 @@
     <Window.Triggers>
         <EventTrigger RoutedEvent="Window.Loaded">
             <!-- Background -->
-            
+
             <!-- Move the offset for the color in the center (BGColor2) -->
             <BeginStoryboard>
                 <Storyboard RepeatBehavior="Forever" AutoReverse="True" BeginTime="0" >
@@ -104,7 +104,7 @@
                 <GradientStop Color="#FF3072FF" Offset="1" x:Name="BGColor3"/>
             </LinearGradientBrush>
         </Border.Background>
-        
+
         <!-- Window content -->
         <Grid>
             <Grid.RowDefinitions>
@@ -117,7 +117,7 @@
                                   Background="#33FFFFFF"
                                   Foreground="White"
                                   Padding="16"
-                                  CornerRadius="0,0,0,0"
+                                  CornerRadius="0,0,10,10"
                                   materialDesign:ShadowAssist.ShadowDepth="Depth2"
                                   ClipToBounds="False">
                 <DockPanel>
@@ -167,7 +167,56 @@
                             Foreground="DimGray"/>
                     </Button>
 
-                    <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                    <!-- New mix button -->
+                    <materialDesign:DialogHost DialogTheme="Inherit"
+                                               DockPanel.Dock="Right"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center">
+                        <materialDesign:DialogHost.DialogContent>
+                            <StackPanel Margin="16" >
+                                <TextBlock Text="Add a new mix."/>
+
+                                <TextBox x:Name="MixNameTextBox"
+                                         Margin="0 8 0 0"
+                                         HorizontalAlignment="Stretch" />
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        Foreground="#03a9f4"
+                                        IsDefault="True"
+                                        Margin="0 8 8 0"
+                                        Content="ADD"
+                                        cal:Message.Attach="[Event Click]=[Action AddNewMix('true', MixNameTextBox.Text)]"
+                                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+                                    </Button>
+
+                                    <Button x:Name="CancelBtn"
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        Foreground="#03a9f4"
+                                        IsCancel="True"
+                                        Margin="0 8 8 0"
+                                        Content="CANCEL"
+                                        cal:Message.Attach="[Event Click]=[Action AddNewMix('false', MixNameTextBox.Text)]"
+                                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </materialDesign:DialogHost.DialogContent>
+
+                        <Border Margin="0,0,15,0">
+                            <Button x:Name="AddMix"
+                                    Style="{StaticResource MaterialDesignRaisedButton}"
+                                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                                    Background="White"
+                                    materialDesign:ButtonAssist.CornerRadius="15"
+                                    ToolTip="Save a new mix"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Content="New Mix" />
+                        </Border>
+                    </materialDesign:DialogHost>
+                    <!--<Button Style="{StaticResource MaterialDesignRaisedButton}"
                             DockPanel.Dock="Right"
                             Margin="0,0,20,0"
                             Background="White"
@@ -175,14 +224,23 @@
                             ToolTip="Save a new Mix"
                             cal:Message.Attach="[Event Click]=[Action AddNewMix($view)]">
                         <TextBlock Text="New Mix" />
-                    </Button>
+                    </Button>-->
+
+                    <!-- All mixes combobox -->
+                    <ComboBox x:Name="MixComboBox"
+                              DockPanel.Dock="Right"
+                              Margin="0,0,15,0"
+                              Height="30"
+                              Width="256"
+                              materialDesign:HintAssist.Hint="Select mix">
+                    </ComboBox>
 
                     <!-- Title -->
                     <TextBlock VerticalAlignment="Center"
-                            Margin="16 0 0 0"
-                            FontSize="44"
-                            FontFamily="Segoe UI Light"
-                            Text="ReFoSl" />
+                               Margin="16 0 0 0"
+                               FontSize="44"
+                               FontFamily="Segoe UI Light"
+                               Text="ReFoSl" />
                 </DockPanel>
             </materialDesign:ColorZone>
 
@@ -327,5 +385,5 @@
         </Grid>
     </Border>
 
-    
+
 </Window>

@@ -2,7 +2,7 @@
 
 namespace ReFoSl.Models
 {
-    class SoundEffectInstanceExtendedModel
+    public class SoundEffectInstanceExtendedModel
     {
         /// <summary>
         /// The name of the sound

@@ -6,7 +6,7 @@ using System.Windows;
 using Microsoft.Xna.Framework.Audio;
 using ReFoSl.Models;
 using System.Windows.Controls.Primitives;
-using ReFoSl.ViewModels;
+using Newtonsoft.Json;
 
 namespace ReFoSl.ViewModels
 {
@@ -18,12 +18,64 @@ namespace ReFoSl.ViewModels
         private const string WAV_EXTENSION = ".wav";
 
         // The list that contains all the playing sounds
-        private List<SoundEffectInstanceExtendedModel> _players = new List<SoundEffectInstanceExtendedModel>();
+        private BindableCollection<SoundEffectInstanceExtendedModel> _players = new BindableCollection<SoundEffectInstanceExtendedModel>();
+        
+        // To take the count of how many sounds are playing
+        // It is bounded to _players.Count
+        // We need this variable to fire the CanAddMix method to disable/enable the button to add a new mix
+        private int count = 0;
+        public int Count
+        {
+            get { return count; }
+            set
+            {
+                count = value;
+                NotifyOfPropertyChange(() => Count);
+                NotifyOfPropertyChange(() => CanAddMix);
+            }
+        }
+
         // The list that contains all the sounds paused with the "Pause all playing sounds"
         private List<SoundEffectInstanceExtendedModel> _pausedSounds = new List<SoundEffectInstanceExtendedModel>();
 
         // The general volume (it affects all the volumes)
         private double _masterVolumeMult = 1f;
+
+        // A dictionary that contains the mixes
+        // The key is the name of the mix
+        // The value is a list of sounds bounded to that mix
+        public static Dictionary<string, BindableCollection<string>> mixNameWithSoundName;
+
+        // The names of the mixes
+        // Show in a combobox
+        private BindableCollection<string> mixComboBox;
+        public BindableCollection<string> MixComboBox
+        {
+            get { return mixComboBox; }
+            set { mixComboBox = value; }
+        }
+
+        public ShellViewModel()
+        {
+            MixComboBox = new BindableCollection<string>();
+            LoadSettings();
+        }
+
+        private void LoadSettings()
+        {
+            mixNameWithSoundName = JsonConvert.DeserializeObject<Dictionary<string, BindableCollection<string>>>(Properties.Settings.Default.MixList);
+
+            if (mixNameWithSoundName == null)
+                mixNameWithSoundName = new Dictionary<string, BindableCollection<string>>();
+            foreach (string s in mixNameWithSoundName.Keys)
+                MixComboBox.Add(s);
+        }
+
+        private void SaveSettings()
+        {
+            Properties.Settings.Default.MixList = JsonConvert.SerializeObject(mixNameWithSoundName);
+            Properties.Settings.Default.Save();
+        }
 
         /// <summary>
         /// Play the selected sound
@@ -40,6 +92,7 @@ namespace ReFoSl.ViewModels
             player.Play(volume, _masterVolumeMult);
 
             _players.Add(player);
+            Count = _players.Count;
 
             // If the "Pause all sounds" is checked, and the user start a new sound
             // delete all the paused sounds, uncheck the button and continue normally
@@ -54,7 +107,7 @@ namespace ReFoSl.ViewModels
         /// <param name="soundName">The name of the selected sound</param>
         public void StopSound(string soundName)
         {
-            // Loop through the players to find the one that is playing the selected sound
+            // Loop through the _players to find the one that is playing the selected sound
             foreach (SoundEffectInstanceExtendedModel player in _players)
             {
                 if (player.Name.Equals(soundName))
@@ -64,6 +117,8 @@ namespace ReFoSl.ViewModels
                     break;
                 }
             }
+
+            Count = _players.Count;
         }
 
         /// <summary>
@@ -113,14 +168,13 @@ namespace ReFoSl.ViewModels
         /// <param name="window">The window</param>
         public void PauseAllPlayingSounds(Window window)
         {
-            var playersCopy = new List<SoundEffectInstanceExtendedModel>(_players);
-            foreach (SoundEffectInstanceExtendedModel player in playersCopy)
+            var _playersCopy = new List<SoundEffectInstanceExtendedModel>(_players);
+            foreach (SoundEffectInstanceExtendedModel player in _playersCopy)
             {
                 _pausedSounds.Add(player);
 
                 CheckUncheckButton(window, player.Name, false);
             }
-            
         }
 
         /// <summary>
@@ -171,20 +225,39 @@ namespace ReFoSl.ViewModels
         }
 
         /// <summary>
-        /// Open a new window to save the name of the mix
-        /// or open a message box if a mix cannot be created (i.e. 0 sounds)
+        /// Enable/Disable the button to add a new mix
+        /// It is enable if and only if there is at least one sound playing
         /// </summary>
-        /// <param name="window"></param>
-        public void AddNewMix(Window window)
+        public bool CanAddMix
         {
-            if (_players.Count != 0)
+            get
             {
-                var addNewMixView = new AddNewMixViewModel();
-                windowManager.ShowDialogAsync(addNewMixView);
+                Console.WriteLine("CanAddMix");
+                return Count != 0;
             }
-            else
-                MessageBox.Show("You cannot create a mix without any sound." +
-                    " Please select some sounds to create a mix.");
+        }
+
+        public void AddMix() {}
+
+        /// <summary>
+        /// Open a new dialog to save the mix
+        /// </summary>
+        /// <param name="accepted">True if the user pressed on the button to create the mix, false otherwise</param>
+        /// <param name="mixName">The name that the user writes for the mix</param>
+        public void AddNewMix(bool accepted, string mixName)
+        {
+            // TODO: handle the case of empty mixName
+            if (accepted)
+            {
+                MixComboBox.Add(mixName);
+
+                BindableCollection<string> sounds = new BindableCollection<string>();
+                foreach (var s in _players)
+                    sounds.Add(s.Name);
+                mixNameWithSoundName.Add(mixName, sounds);
+
+                SaveSettings();
+            }
         }
 
         /// <summary>
@@ -221,5 +294,4 @@ namespace ReFoSl.ViewModels
             ChangeVolume(s, soundName);
         }
     }
-    
 }

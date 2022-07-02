@@ -9,7 +9,7 @@
                 <ResourceDictionary>
                     <local:Bootstrapper x:Key="Bootstrapper" />
                 </ResourceDictionary>
-                <materialDesign:CustomColorTheme BaseTheme="Dark" PrimaryColor="#bdbdbd" SecondaryColor="LightGray" />
+                <materialDesign:CustomColorTheme BaseTheme="Dark" PrimaryColor="White" SecondaryColor="LightGray" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
