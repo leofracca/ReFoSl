@@ -48,16 +48,36 @@ namespace ReFoSl.ViewModels
 
         // The names of the mixes
         // Show in a combobox
-        private BindableCollection<string> mixComboBox;
-        public BindableCollection<string> MixComboBox
+        private BindableCollection<string> mixNames;
+        public BindableCollection<string> MixNames
         {
-            get { return mixComboBox; }
-            set { mixComboBox = value; }
+            get { return mixNames; }
+            set { mixNames = value; }
+        }
+
+        private string _selectedMixName;
+        public string SelectedMixName
+        {
+            get { return _selectedMixName; }
+            set
+            {
+                _selectedMixName = value;
+                NotifyOfPropertyChange(() => SelectedMixName);
+
+                // Stop all playing sounds
+                var _playersCopy = new List<SoundEffectInstanceExtendedModel>(_players);
+                foreach (var sound in _playersCopy)
+                    CheckUncheckButton(Application.Current.MainWindow, sound.Name, false);
+                
+                // Find the name of the mix in the dictionary and start the sounds
+                foreach (string sound in mixNameWithSoundName[_selectedMixName])
+                    CheckUncheckButton(Application.Current.MainWindow, sound, true);
+            }
         }
 
         public ShellViewModel()
         {
-            MixComboBox = new BindableCollection<string>();
+            MixNames = new BindableCollection<string>();
             LoadSettings();
         }
 
@@ -68,7 +88,7 @@ namespace ReFoSl.ViewModels
             if (mixNameWithSoundName == null)
                 mixNameWithSoundName = new Dictionary<string, BindableCollection<string>>();
             foreach (string s in mixNameWithSoundName.Keys)
-                MixComboBox.Add(s);
+                MixNames.Add(s);
         }
 
         private void SaveSettings()
@@ -249,7 +269,7 @@ namespace ReFoSl.ViewModels
             // TODO: handle the case of empty mixName
             if (accepted)
             {
-                MixComboBox.Add(mixName);
+                MixNames.Add(mixName);
 
                 BindableCollection<string> sounds = new BindableCollection<string>();
                 foreach (var s in _players)
@@ -262,6 +282,7 @@ namespace ReFoSl.ViewModels
 
         /// <summary>
         /// Check or uncheck the button with the same name as the sound name (soundName)
+        /// This trigger the sound to play (check) or to stop (uncheck)
         /// </summary>
         /// <param name="window">The window</param>
         /// <param name="soundName">The name of the sound (i.e. the name of the button)</param>

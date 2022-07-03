@@ -216,18 +216,9 @@
                                     Content="New Mix" />
                         </Border>
                     </materialDesign:DialogHost>
-                    <!--<Button Style="{StaticResource MaterialDesignRaisedButton}"
-                            DockPanel.Dock="Right"
-                            Margin="0,0,20,0"
-                            Background="White"
-                            materialDesign:ButtonAssist.CornerRadius="15"
-                            ToolTip="Save a new Mix"
-                            cal:Message.Attach="[Event Click]=[Action AddNewMix($view)]">
-                        <TextBlock Text="New Mix" />
-                    </Button>-->
 
                     <!-- All mixes combobox -->
-                    <ComboBox x:Name="MixComboBox"
+                    <ComboBox x:Name="MixNames"
                               DockPanel.Dock="Right"
                               Margin="0,0,15,0"
                               Height="30"
