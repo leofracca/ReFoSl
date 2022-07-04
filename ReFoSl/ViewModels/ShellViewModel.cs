@@ -12,8 +12,6 @@ namespace ReFoSl.ViewModels
 {
     public class ShellViewModel : Screen
     {
-        IWindowManager windowManager = new WindowManager();
-
         private const string SOUNDS_FOLDER = "Sounds/";
         private const string WAV_EXTENSION = ".wav";
 
@@ -112,7 +110,7 @@ namespace ReFoSl.ViewModels
             player.Play(volume, _masterVolumeMult);
 
             _players.Add(player);
-            Count = _players.Count;
+            Count++;
 
             // If the "Pause all sounds" is checked, and the user start a new sound
             // delete all the paused sounds, uncheck the button and continue normally
@@ -138,7 +136,7 @@ namespace ReFoSl.ViewModels
                 }
             }
 
-            Count = _players.Count;
+            Count--;
         }
 
         /// <summary>
