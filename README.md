@@ -20,7 +20,7 @@ The followings are used to make this project:
 
 ## Images
 
-![1](docs/1.png)![2](docs/2.png)![3](docs/3.png)![4](docs/4.png)
+![1](docs/1.PNG)![2](docs/2.PNG)![3](docs/3.PNG)![4](docs/4.PNG)
 
 
 
