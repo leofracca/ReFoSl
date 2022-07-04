@@ -18,5 +18,12 @@ The followings are used to make this project:
 - [MaterialDesignInXamlToolkit](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit), for the style of the program
 - [Mixkit](https://mixkit.co/free-sound-effects/), [Freesound](https://freesound.org/) and [ZapSplat](https://www.zapsplat.com/) for the amazing sounds
 
+## Images
+
+![1](docs/1.png)![2](docs/2.png)![3](docs/3.png)![4](docs/4.png)
+
+
+
 ## Others
-I wanted to make ReFoSl because all of the other similar projects need a connection to internet and/or a premium subscription. ReFoSl solves these problems providing all the sounds for free and offline!:wink:
+
+Currently ReFoSl only exists for Windows, but I'm planning to create a version for Linux and MacOS and an Android app.
