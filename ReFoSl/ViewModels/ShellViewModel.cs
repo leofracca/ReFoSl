@@ -19,7 +19,7 @@ namespace ReFoSl.ViewModels
         private BindableCollection<SoundEffectInstanceExtendedModel> _players = new BindableCollection<SoundEffectInstanceExtendedModel>();
         
         // To take the count of how many sounds are playing
-        // It is bounded to _players.Count
+        // It is bound to _players.Count
         // We need this variable to fire the CanAddMix method to disable/enable the button to add a new mix
         private int count = 0;
         public int Count
@@ -41,7 +41,7 @@ namespace ReFoSl.ViewModels
 
         // A dictionary that contains the mixes
         // The key is the name of the mix
-        // The value is a list of sounds bounded to that mix
+        // The value is a list of sounds bound to that mix
         public static Dictionary<string, BindableCollection<string>> mixNameWithSoundName;
 
         // The names of the mixes
@@ -62,14 +62,17 @@ namespace ReFoSl.ViewModels
                 _selectedMixName = value;
                 NotifyOfPropertyChange(() => SelectedMixName);
 
-                // Stop all playing sounds
-                var _playersCopy = new List<SoundEffectInstanceExtendedModel>(_players);
-                foreach (var sound in _playersCopy)
-                    CheckUncheckButton(Application.Current.MainWindow, sound.Name, false);
-                
-                // Find the name of the mix in the dictionary and start the sounds
-                foreach (string sound in mixNameWithSoundName[_selectedMixName])
-                    CheckUncheckButton(Application.Current.MainWindow, sound, true);
+                if (_selectedMixName != null)
+                {
+                    // Stop all playing sounds
+                    var _playersCopy = new List<SoundEffectInstanceExtendedModel>(_players);
+                    foreach (var sound in _playersCopy)
+                        CheckUncheckButton(Application.Current.MainWindow, sound.Name, false);
+
+                    // Find the name of the mix in the dictionary and start the sounds
+                    foreach (string sound in mixNameWithSoundName[_selectedMixName])
+                        CheckUncheckButton(Application.Current.MainWindow, sound, true);
+                }
             }
         }
 
@@ -79,6 +82,9 @@ namespace ReFoSl.ViewModels
             LoadSettings();
         }
 
+        /// <summary>
+        /// Load the mixes
+        /// </summary>
         private void LoadSettings()
         {
             mixNameWithSoundName = JsonConvert.DeserializeObject<Dictionary<string, BindableCollection<string>>>(Properties.Settings.Default.MixList);
@@ -89,6 +95,9 @@ namespace ReFoSl.ViewModels
                 MixNames.Add(s);
         }
 
+        /// <summary>
+        /// Save the mixes
+        /// </summary>
         private void SaveSettings()
         {
             Properties.Settings.Default.MixList = JsonConvert.SerializeObject(mixNameWithSoundName);
@@ -117,6 +126,8 @@ namespace ReFoSl.ViewModels
             _pausedSounds.Clear();
             var pauseAll = (ToggleButton)window.FindName("PauseAll");
             pauseAll.IsChecked = false;
+
+            ClearMixNameComboBox();
         }
 
         /// <summary>
@@ -137,6 +148,8 @@ namespace ReFoSl.ViewModels
             }
 
             Count--;
+
+            ClearMixNameComboBox();
         }
 
         /// <summary>
@@ -250,7 +263,6 @@ namespace ReFoSl.ViewModels
         {
             get
             {
-                Console.WriteLine("CanAddMix");
                 return Count != 0;
             }
         }
@@ -294,6 +306,20 @@ namespace ReFoSl.ViewModels
             // Avoid to check the button if it is already checked (a new sound would start...)
             if (tb.IsChecked != check)
                 tb.IsChecked = check;
+
+            ClearMixNameComboBox();
+        }
+
+        /// <summary>
+        /// Clear the mixes combobox when a mix is playing and a sound is stopped or played
+        /// </summary>
+        private void ClearMixNameComboBox()
+        {
+            if (SelectedMixName != null)
+            {
+                var mixCB = (ComboBox)Application.Current.MainWindow.FindName("MixNames");
+                mixCB.SelectedValue = null;
+            }
         }
 
         /// <summary>
