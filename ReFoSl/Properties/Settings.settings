@@ -3,8 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="MixList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">
-</Value>
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MasterVolume" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1</Value>
     </Setting>
   </Settings>
 </SettingsFile>

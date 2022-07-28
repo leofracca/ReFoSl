@@ -37,7 +37,16 @@ namespace ReFoSl.ViewModels
         private List<SoundEffectInstanceExtendedModel> _pausedSounds = new List<SoundEffectInstanceExtendedModel>();
 
         // The general volume (it affects all the volumes)
-        private double _masterVolumeMult = 1f;
+        private double _masterVolume;
+        public double MasterVolume
+        {
+            get { return _masterVolume; }
+            set
+            {
+                _masterVolume = value;
+                NotifyOfPropertyChange(() => MasterVolume);
+            }
+        }
 
         // A dictionary that contains the mixes
         // The key is the name of the mix
@@ -87,12 +96,16 @@ namespace ReFoSl.ViewModels
         /// </summary>
         private void LoadSettings()
         {
+            // Load the mixes
             mixNameWithSoundName = JsonConvert.DeserializeObject<Dictionary<string, BindableCollection<string>>>(Properties.Settings.Default.MixList);
 
             if (mixNameWithSoundName == null)
                 mixNameWithSoundName = new Dictionary<string, BindableCollection<string>>();
             foreach (string s in mixNameWithSoundName.Keys)
                 MixNames.Add(s);
+
+            // Load the value of the master volume
+            MasterVolume = Properties.Settings.Default.MasterVolume;
         }
 
         /// <summary>
@@ -100,8 +113,18 @@ namespace ReFoSl.ViewModels
         /// </summary>
         private void SaveSettings()
         {
+            // Save the mixes
             Properties.Settings.Default.MixList = JsonConvert.SerializeObject(mixNameWithSoundName);
+            // Save the value of the master volume
+            Properties.Settings.Default.MasterVolume = MasterVolume;
+
             Properties.Settings.Default.Save();
+        }
+
+        public void OnClose()
+        {
+            Console.WriteLine("ON CLOSE");
+            SaveSettings();
         }
 
         /// <summary>
@@ -116,7 +139,7 @@ namespace ReFoSl.ViewModels
 
             SoundEffectInstanceExtendedModel player = new SoundEffectInstanceExtendedModel(soundName,
                 SoundEffect.FromStream(Application.GetContentStream(new Uri(sound, UriKind.Relative)).Stream).CreateInstance());
-            player.Play(volume, _masterVolumeMult);
+            player.Play(volume, MasterVolume);
 
             _players.Add(player);
             Count++;
@@ -163,7 +186,7 @@ namespace ReFoSl.ViewModels
             {
                 if (player.Name.Equals(soundName))
                 {
-                    player.Volume = slider.Value * _masterVolumeMult;
+                    player.Volume = slider.Value * MasterVolume;
                     player.RelativeVolume = slider.Value;
                     break;
                 }
@@ -176,21 +199,12 @@ namespace ReFoSl.ViewModels
         /// <param name="slider">The slider that represents the master volume</param>
         public void SetMasterVolume(Slider slider)
         {
-            // List that contains the relative volume of each sound
-            // (i.e. the volume of the slider below the button)
-            List<double> relativeVolumes = new List<double>();
-
             // Save the value of the master volume
-            _masterVolumeMult = slider.Value;
+            MasterVolume = slider.Value;
 
             // Set the volume for each playing sound
             for (int i = 0; i < _players.Count; i++)
-            {
-                if (!relativeVolumes.Contains(_players[i].RelativeVolume))
-                    relativeVolumes.Add(_players[i].RelativeVolume);
-
-                _players[i].Volume = relativeVolumes[i] * _masterVolumeMult;
-            }
+                _players[i].Volume = _players[i].RelativeVolume * MasterVolume;
         }
 
         /// <summary>
@@ -286,7 +300,7 @@ namespace ReFoSl.ViewModels
                     sounds.Add(s.Name);
                 mixNameWithSoundName.Add(mixName, sounds);
 
-                SaveSettings();
+                // SaveSettings();
             }
         }
 

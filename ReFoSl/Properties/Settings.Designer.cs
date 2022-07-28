@@ -34,5 +34,17 @@ namespace ReFoSl.Properties {
                 this["MixList"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public double MasterVolume {
+            get {
+                return ((double)(this["MasterVolume"]));
+            }
+            set {
+                this["MasterVolume"] = value;
+            }
+        }
     }
 }

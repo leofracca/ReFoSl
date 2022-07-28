@@ -22,7 +22,8 @@
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
-        FontFamily="{materialDesign:MaterialDesignFont}">
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        cal:Message.Attach="[Event Closing] = [Action OnClose()]">
     <Window.Triggers>
         <EventTrigger RoutedEvent="Window.Loaded">
             <!-- Background -->
