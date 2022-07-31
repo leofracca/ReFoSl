@@ -51,7 +51,7 @@ namespace ReFoSl.ViewModels
         // A dictionary that contains the mixes
         // The key is the name of the mix
         // The value is a list of sounds bound to that mix
-        public static Dictionary<string, BindableCollection<string>> mixNameWithSoundName;
+        public static Dictionary<string, Dictionary<string, double>> mixNameWithSoundName;
 
         // The names of the mixes
         // Show in a combobox
@@ -79,8 +79,12 @@ namespace ReFoSl.ViewModels
                         CheckUncheckButton(Application.Current.MainWindow, sound.Name, false);
 
                     // Find the name of the mix in the dictionary and start the sounds
-                    foreach (string sound in mixNameWithSoundName[_selectedMixName])
-                        CheckUncheckButton(Application.Current.MainWindow, sound, true);
+                    foreach (var sound in mixNameWithSoundName[_selectedMixName])
+                    {
+                        CheckUncheckButton(Application.Current.MainWindow, sound.Key, true);
+                        SetSlider(Application.Current.MainWindow, sound.Key, sound.Value);
+                    }
+                        
                 }
             }
         }
@@ -97,10 +101,10 @@ namespace ReFoSl.ViewModels
         private void LoadSettings()
         {
             // Load the mixes
-            mixNameWithSoundName = JsonConvert.DeserializeObject<Dictionary<string, BindableCollection<string>>>(Properties.Settings.Default.MixList);
+            mixNameWithSoundName = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, double>>>(Properties.Settings.Default.MixList);
 
             if (mixNameWithSoundName == null)
-                mixNameWithSoundName = new Dictionary<string, BindableCollection<string>>();
+                mixNameWithSoundName = new Dictionary<string, Dictionary<string, double>>();
             foreach (string s in mixNameWithSoundName.Keys)
                 MixNames.Add(s);
 
@@ -123,7 +127,6 @@ namespace ReFoSl.ViewModels
 
         public void OnClose()
         {
-            Console.WriteLine("ON CLOSE");
             SaveSettings();
         }
 
@@ -295,12 +298,10 @@ namespace ReFoSl.ViewModels
             {
                 MixNames.Add(mixName);
 
-                BindableCollection<string> sounds = new BindableCollection<string>();
+                var sounds = new Dictionary<string, double>();
                 foreach (var s in _players)
-                    sounds.Add(s.Name);
+                    sounds.Add(s.Name, s.RelativeVolume);
                 mixNameWithSoundName.Add(mixName, sounds);
-
-                // SaveSettings();
             }
         }
 
