@@ -18,7 +18,7 @@ namespace ReFoSl.ViewModels
         // The list that contains all the playing sounds
         private BindableCollection<SoundEffectInstanceExtendedModel> _players = new BindableCollection<SoundEffectInstanceExtendedModel>();
         
-        // To take the count of how many sounds are playing
+        // Variable to count how many sounds are playing
         // It is bound to _players.Count
         // We need this variable to fire the CanAddMix method to disable/enable the button to add a new mix
         private int count = 0;
@@ -33,7 +33,7 @@ namespace ReFoSl.ViewModels
             }
         }
 
-        // The list that contains all the sounds paused with the "Pause all playing sounds"
+        // The list that contains all the sounds paused with the "Pause all playing sounds" button
         private List<SoundEffectInstanceExtendedModel> _pausedSounds = new List<SoundEffectInstanceExtendedModel>();
 
         // The general volume (it affects all the volumes)
@@ -50,11 +50,10 @@ namespace ReFoSl.ViewModels
 
         // A dictionary that contains the mixes
         // The key is the name of the mix
-        // The value is a list of sounds bound to that mix
+        // The value is another dictionary with the sounds of that mix and the corresponding volumes
         public static Dictionary<string, Dictionary<string, double>> mixNameWithSoundName;
 
         // The names of the mixes
-        // Show in a combobox
         private BindableCollection<string> mixNames;
         public BindableCollection<string> MixNames
         {
@@ -62,6 +61,7 @@ namespace ReFoSl.ViewModels
             set { mixNames = value; }
         }
 
+        // The selected mix by the user from the combobox
         private string _selectedMixName;
         public string SelectedMixName
         {
@@ -73,22 +73,23 @@ namespace ReFoSl.ViewModels
 
                 if (_selectedMixName != null)
                 {
-                    // Stop all playing sounds
-                    var _playersCopy = new List<SoundEffectInstanceExtendedModel>(_players);
-                    foreach (var sound in _playersCopy)
-                        CheckUncheckButton(Application.Current.MainWindow, sound.Name, false);
+                    StopAllPlayingSounds();
 
                     // Find the name of the mix in the dictionary and start the sounds
                     foreach (var sound in mixNameWithSoundName[_selectedMixName])
                     {
-                        CheckUncheckButton(Application.Current.MainWindow, sound.Key, true);
-                        SetSlider(Application.Current.MainWindow, sound.Key, sound.Value);
+                        CheckUncheckButton(sound.Key, true);
+                        SetSlider(sound.Key, sound.Value);
                     }
                         
                 }
             }
         }
 
+        /// <summary>
+        /// Constructor
+        /// It initializes the mix names collection and loads the saved settings
+        /// </summary>
         public ShellViewModel()
         {
             MixNames = new BindableCollection<string>();
@@ -96,7 +97,7 @@ namespace ReFoSl.ViewModels
         }
 
         /// <summary>
-        /// Load the mixes
+        /// Load the saved settings
         /// </summary>
         private void LoadSettings()
         {
@@ -113,7 +114,7 @@ namespace ReFoSl.ViewModels
         }
 
         /// <summary>
-        /// Save the mixes
+        /// Save the current settings
         /// </summary>
         private void SaveSettings()
         {
@@ -125,6 +126,9 @@ namespace ReFoSl.ViewModels
             Properties.Settings.Default.Save();
         }
 
+        /// <summary>
+        /// Called when the user closes the window
+        /// </summary>
         public void OnClose()
         {
             SaveSettings();
@@ -135,8 +139,7 @@ namespace ReFoSl.ViewModels
         /// </summary>
         /// <param name="soundName">The name of the selected sound</param>
         /// <param name="volume">The volume of the selected sound</param>
-        /// <param name="window">The window</param>
-        public void PlaySound(string soundName, double volume, Window window)
+        public void PlaySound(string soundName, double volume)
         {
             string sound = SOUNDS_FOLDER + soundName + WAV_EXTENSION;
 
@@ -147,10 +150,10 @@ namespace ReFoSl.ViewModels
             _players.Add(player);
             Count++;
 
-            // If the "Pause all sounds" is checked, and the user start a new sound
+            // If the "Pause all sounds" is checked, and the user start a new sound,
             // delete all the paused sounds, uncheck the button and continue normally
             _pausedSounds.Clear();
-            var pauseAll = (ToggleButton)window.FindName("PauseAll");
+            var pauseAll = (ToggleButton)Application.Current.MainWindow.FindName("PauseAll");
             pauseAll.IsChecked = false;
 
             ClearMixNameComboBox();
@@ -162,7 +165,7 @@ namespace ReFoSl.ViewModels
         /// <param name="soundName">The name of the selected sound</param>
         public void StopSound(string soundName)
         {
-            // Loop through the _players to find the one that is playing the selected sound
+            // Loop through all the playing sounds to find the one that has the same name of the selected sound
             foreach (SoundEffectInstanceExtendedModel player in _players)
             {
                 if (player.Name.Equals(soundName))
@@ -185,6 +188,7 @@ namespace ReFoSl.ViewModels
         /// <param name="soundName">The name of the selected sound</param>
         public void ChangeVolume(Slider slider, string soundName)
         {
+            // Loop through all the playing sounds to find the one that has the same name of the selected sound
             foreach (SoundEffectInstanceExtendedModel player in _players)
             {
                 if (player.Name.Equals(soundName))
@@ -213,48 +217,53 @@ namespace ReFoSl.ViewModels
         /// <summary>
         /// Pause all the playing sounds
         /// </summary>
-        /// <param name="window">The window</param>
-        public void PauseAllPlayingSounds(Window window)
+        public void PauseAllPlayingSounds()
         {
             var _playersCopy = new List<SoundEffectInstanceExtendedModel>(_players);
             foreach (SoundEffectInstanceExtendedModel player in _playersCopy)
             {
                 _pausedSounds.Add(player);
 
-                CheckUncheckButton(window, player.Name, false);
+                CheckUncheckButton(player.Name, false);
             }
         }
 
         /// <summary>
         /// Restart all the paused sounds
         /// </summary>
-        /// <param name="window">The window</param>
-        public void PlayAllPausedSounds(Window window)
+        public void PlayAllPausedSounds()
         {
             var pausedCopy = new List<SoundEffectInstanceExtendedModel>(_pausedSounds);
             foreach (SoundEffectInstanceExtendedModel player in pausedCopy)
             {
                 _pausedSounds.Remove(player);
 
-                CheckUncheckButton(window, player.Name, true);
+                CheckUncheckButton(player.Name, true);
             }
         }
 
         /// <summary>
-        /// Throw a random number between 2 and 4 (n) and play n random sounds
+        /// Stop all the playing sounds
         /// </summary>
-        /// <param name="window">The window</param>
-        public void PlayRandomSounds(Window window)
+        private void StopAllPlayingSounds()
+        {
+            // Pause all the sounds
+            PauseAllPlayingSounds();
+            // But clear the list of the paused sounds (we don't want to remember the sounds in this case)
+            _pausedSounds.Clear();
+        }
+
+        /// <summary>
+        /// Throw a random number (n) and play n random sounds
+        /// </summary>
+        public void PlayRandomSounds()
         {
             string[] soundNames = new string[] {"footsteps_on_grass", "birds", "campfire", "water_flowing",
                                                 "forest", "rain", "thunderstorm", "waves",
                                                 "happy_puppy_barks", "kids_playing", "restaurant", "stadium",
                                                 "eating", "keyboard", "writing_on_blackboard", "clock"};
 
-            // Stop all the sounds
-            PauseAllPlayingSounds(window);
-            // But clear the list (we don't want to remember the sounds in this case)
-            _pausedSounds.Clear();
+            StopAllPlayingSounds();
 
             // Choose a random number
             Random rnd = new Random();
@@ -265,10 +274,10 @@ namespace ReFoSl.ViewModels
             {
                 // Choose a random sound and start it
                 var randomSound = soundNames[rnd.Next(soundNames.Length)];
-                CheckUncheckButton(window, randomSound, true);
+                CheckUncheckButton(randomSound, true);
 
                 // Then set the volume to a random value
-                SetSlider(window, randomSound, rnd.NextDouble());
+                SetSlider(randomSound, rnd.NextDouble());
             }
         }
 
@@ -287,13 +296,14 @@ namespace ReFoSl.ViewModels
         public void AddMix() {}
 
         /// <summary>
-        /// Open a new dialog to save the mix
+        /// Open a new dialog to save a new mix
         /// </summary>
         /// <param name="accepted">True if the user pressed on the button to create the mix, false otherwise</param>
         /// <param name="mixName">The name that the user writes for the mix</param>
         public void AddNewMix(bool accepted, string mixName)
         {
             // TODO: handle the case of empty mixName
+
             if (accepted)
             {
                 MixNames.Add(mixName);
@@ -307,15 +317,14 @@ namespace ReFoSl.ViewModels
 
         /// <summary>
         /// Check or uncheck the button with the same name as the sound name (soundName)
-        /// This trigger the sound to play (check) or to stop (uncheck)
+        /// Doing this will trigger the sound to play (check the button) or to stop (uncheck the button)
         /// </summary>
-        /// <param name="window">The window</param>
         /// <param name="soundName">The name of the sound (i.e. the name of the button)</param>
         /// <param name="check">True if we need to check the button, false if we need to uncheck the button</param>
-        private void CheckUncheckButton(Window window, string soundName, bool check)
+        private void CheckUncheckButton(string soundName, bool check)
         {
             // Find the right button and uncheck it (doing this will stop the sound)
-            var b = (ButtonAndSlider)window.FindName(soundName);
+            var b = (ButtonAndSlider)Application.Current.MainWindow.FindName(soundName);
             var tb = (ToggleButton)b.FindName("button");
 
             // Avoid to check the button if it is already checked (a new sound would start...)
@@ -341,13 +350,12 @@ namespace ReFoSl.ViewModels
         /// Set the value of the slider corresponding to the button with the name of the sound (soundName)
         /// and change the volume
         /// </summary>
-        /// <param name="window">The window</param>
         /// <param name="soundName">The name of the sound (i.e. the name of the button)</param>
         /// <param name="volume">The value to set the slider (and to set the volume)</param>
-        private void SetSlider(Window window, string soundName, double volume)
+        private void SetSlider(string soundName, double volume)
         {
             // Find the right slider and adjust the value
-            var b = (ButtonAndSlider)window.FindName(soundName);
+            var b = (ButtonAndSlider)Application.Current.MainWindow.FindName(soundName);
             var s = (Slider)b.FindName("slider");
             s.Value = volume;
 

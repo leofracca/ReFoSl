@@ -19,19 +19,6 @@ namespace ReFoSl
 
 
         /// <summary>
-        /// The name of the sound that each button needs to play
-        /// </summary>
-        public string SoundName
-        {
-            get { return (string)GetValue(SoundNameProperty); }
-            set { SetValue(SoundNameProperty, value); }
-        }
-
-        public static readonly DependencyProperty SoundNameProperty =
-            DependencyProperty.Register("SoundName", typeof(string), typeof(ButtonAndSlider), new UIPropertyMetadata(""));
-
-
-        /// <summary>
         /// The path of the image of each button
         /// </summary>
         public string ImagePath

@@ -31,7 +31,10 @@ namespace ReFoSl.Models
         public double Volume
         {
             get { return _volume; }
-            set { _volume = value; _soundEffectInstanceProperty.Volume = (float)value; }
+            set
+            {   _volume = value;
+                _soundEffectInstanceProperty.Volume = (float)value;
+            }
         }
 
         /// <summary>
