@@ -258,10 +258,13 @@ namespace ReFoSl.ViewModels
         /// </summary>
         public void PlayRandomSounds()
         {
+            // TODO: find a new way to get all the name of the sounds without listing them manually
+            // (look inside the Sounds folder and get the names?)
             string[] soundNames = new string[] {"footsteps_on_grass", "birds", "campfire", "water_flowing",
                                                 "forest", "rain", "thunderstorm", "waves",
                                                 "happy_puppy_barks", "kids_playing", "restaurant", "stadium",
-                                                "eating", "keyboard", "writing_on_blackboard", "clock"};
+                                                "eating", "keyboard", "writing_on_blackboard", "clock",
+                                                "cicadas", "crickets", "wind", "footsteps_on_snow"};
 
             StopAllPlayingSounds();
 
